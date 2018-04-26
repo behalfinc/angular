@@ -1622,7 +1622,7 @@ describe('Integration', () => {
 
              location.go('/two');
              advance(fixture);
-             expect(location.path()).toEqual('/one');
+             expect(location.path()).toEqual('/two');
 
            })));
       });

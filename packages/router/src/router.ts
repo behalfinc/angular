@@ -178,6 +178,7 @@ type NavigationParams = {
   reject: any,
   promise: Promise<boolean>,
   source: NavigationSource,
+  isSuccessful?: boolean
 };
 
 /**
@@ -551,8 +552,15 @@ export class Router {
     return promise.catch((e: any) => Promise.reject(e));
   }
 
-  private executeScheduledNavigation(a: NavigationParams):
-      void {
+	private executeScheduledNavigation(a: NavigationParams): void {
+
+		const resolve = ((isSuccessfulNavigation: any) => {
+			if (isSuccessfulNavigation) {
+				this.lastSuccessfulNavigationPath = this.location.path(true);
+				a.isSuccessful                    = true;
+			}
+			a.resolve(isSuccessfulNavigation);
+		}).bind(this);
 
     const id = a.id, rawUrl = a.rawUrl, extras = a.extras, source = a.source, reject = a.reject;
     const url = this.urlHandlingStrategy.extract(rawUrl);
@@ -584,13 +592,6 @@ export class Router {
       resolve(null);
     }
 
-    function resolve (isSuccessfulNavigation: any) {
-      if (isSuccessfulNavigation) {
-        this.lastSuccessfulNavigationPath = this.location.path(true);
-        a.isSuccessful = true;
-      }
-        a.resolve(isSuccessfulNavigation);
-    }
   }
 
   private runNavigate( source: string,
