@@ -551,8 +551,10 @@ export class Router {
     return promise.catch((e: any) => Promise.reject(e));
   }
 
-  private executeScheduledNavigation({id, rawUrl, extras, source, reject}: NavigationParams):
+  private executeScheduledNavigation(a: NavigationParams):
       void {
+
+    const id = a.id, rawUrl = a.rawUrl, extras = a.extras, source = a.source, reject = a.reject;
     const url = this.urlHandlingStrategy.extract(rawUrl);
     const urlTransition = !this.navigated || url.toString() !== this.currentUrlTree.toString();
 
@@ -585,9 +587,9 @@ export class Router {
     function resolve (isSuccessfulNavigation: any) {
       if (isSuccessfulNavigation) {
         this.lastSuccessfulNavigationPath = this.location.path(true);
-        this.isSuccessful = true;
+        a.isSuccessful = true;
       }
-        this.resolve(isSuccessfulNavigation);
+        a.resolve(isSuccessfulNavigation);
     }
   }
 
